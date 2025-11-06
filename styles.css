@@ -59,3 +59,13 @@ h1 {
     font-size: 42px; /* Increases font size */
     padding: 10px; /* Adds space around the heading */
 }
+
+/* Game page specific styles */
+#startButton {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#startButton:hover {
+    transform: scale(1.1); /* Make it 10% bigger */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* Add shadow for "popping out" effect */
+}
