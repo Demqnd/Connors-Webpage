@@ -57,6 +57,9 @@
         let y = size  *  13;
         let runGame = false;
         
+        // Array to track pressed keys
+        let keysPressed = [];
+        
         
 
         function draw() {
@@ -105,8 +108,13 @@
                     if (y > canvas.height-size) y = canvas.height - size; // Wrap around
                 }
 
-
-
+                if ((x-size) % (size*2) <= 1.5 && (y-size) % (size*2) <= 1.5) {
+                    if (keysPressed.length > 0) {
+                        direction = keysPressed.shift(); // Get first element and remove it
+                        console.log(keysPressed);
+                    }
+                }
+                
 
                 
                 requestAnimationFrame(gameLoop); // Runs at 60 FPS
@@ -121,27 +129,31 @@
             
             switch(event.key) {
                 case 'ArrowUp':
-                    if (direction !== "SOUTH") {
-                        direction = "NORTH";
+                    if (direction !== "SOUTH" && keysPressed[keysPressed.length - 1] !== "NORTH" && keysPressed.length <= 3) {
+                        //direction = "NORTH";
+                        keysPressed.push("NORTH");  // Adds key to end of array
                     }
                     break;
                 case 'ArrowDown':
-                    if (direction !== "NORTH") {
-                        direction = "SOUTH";
+                    if (direction !== "NORTH" && keysPressed[keysPressed.length - 1] !== "SOUTH" && keysPressed.length <= 3) {
+                        //direction = "SOUTH";
+                        keysPressed.push("SOUTH");  // Adds key to end of array
                     }
                     break;
                 case 'ArrowLeft':
-                    if (direction !== "EAST") {
-                        direction = "WEST";
+                    if (direction !== "EAST" && keysPressed[keysPressed.length - 1] !== "WEST" && keysPressed.length <= 3) {
+                        //direction = "WEST";
+                        keysPressed.push("WEST");  // Adds key to end of array
                     }
                     break;
                 case 'ArrowRight':
-                    if (direction !== "WEST") {
-                        direction = "EAST";
+                    if (direction !== "WEST" && keysPressed[keysPressed.length - 1] !== "EAST" && keysPressed.length <= 3) {
+                        //direction = "EAST";
+                        keysPressed.push("EAST");  // Adds key to end of array
                     }
                     break;
             }
-            console.log(event.key);
+            
         });
 
         //Click event listener. For use later if needed.
