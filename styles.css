@@ -1,0 +1,61 @@
+/* Basic reset to control spacing */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* Fixed Navigation Bar */
+.navbar {
+    position: fixed;        /* Stays in place when scrolling */
+    top: 0;                /* Sticks to the top */
+    left: 0;               /* Starts from left edge */
+    width: 100%;           /* Full width */
+    background-color: #333; /* Dark background */
+    z-index: 1000;         /* Appears above other content */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nav-title {
+    color: white;
+    font-size: 24px;
+    margin: 15px 0;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 15px 0;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #4CAF50; /* Green color on hover */
+}
+
+/* Add top margin to body content so it doesn't hide behind navbar */
+.container {
+    margin-top: 80px; /* Push content below the fixed navbar */
+}
+
+h1 {
+    margin-bottom: 5px; /* Control the space after heading */
+    text-align: center; /* Centers the text */
+    font-size: 42px; /* Increases font size */
+    padding: 10px; /* Adds space around the heading */
+}
