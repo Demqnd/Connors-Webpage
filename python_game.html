@@ -48,17 +48,28 @@
         const ctx = canvas.getContext('2d');
         
         // Simple variables
-        let size = 30;
+        let size = 26;
         let direction = "EAST";
-        const moveSpeed = 1.5; // Smaller movement since we're running at 60 FPS
+        const moveSpeed = 1.25; // Smaller movement since we're running at 60 FPS
 
         // Make the multiplied number an odd number to allign properly with checkerboard
-        let x = size  *  6;
+        let x = size  *  7 + moveSpeed*2;
         let y = size  *  13;
         let runGame = false;
         
         // Array to track pressed keys
         let keysPressed = [];
+
+        // Array to track where the snake has been
+        let snakeTrail = [];
+        let snakeLength = 3;
+        let tailWidthDecrease = 0;
+
+        // Initialize snake with all 3 segments
+        for (let i = 0; i < snakeLength; i++) {
+            snakeTrail.unshift({x: x - (i * size*2), y: y});
+        }
+
         
         
 
@@ -67,6 +78,8 @@
             ctx.fillStyle = 'black';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+
+            //Drawing checkerboard pattern
             ctx.fillStyle = 'gray';
             for (let i = 0; i < canvas.width; i += size*2*2) {
                 for (let j = 0; j < canvas.height; j += size*2) {
@@ -76,7 +89,7 @@
                         ctx.fillRect(i, j, size*2, size*2);
                     }
                     
-                    
+                     
                 }
                 
             }
@@ -86,14 +99,133 @@
             ctx.beginPath();
             ctx.fillStyle = 'red';
             ctx.arc(x, y, size, 0, Math.PI * 2);
-            
             ctx.fill();
+
+            // Draw the snake trail
+            ctx.fillStyle = 'red';
+            for (let i = 0; i < snakeTrail.length; i++) {
+                ctx.beginPath();
+                ctx.arc(snakeTrail[i].x, snakeTrail[i].y, size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Connect the tail to the rest of the body
+                if (i !== 0) {
+                    if (snakeTrail[i].x === snakeTrail[i-1].x) {
+                        // Vertical segment
+                        if (snakeTrail[i].y < snakeTrail[i-1].y) {
+                            // Moving North
+                            ctx.beginPath();
+                            ctx.roundRect(snakeTrail[i].x-size, snakeTrail[i].y-size, size*2, snakeTrail[i-1].y - snakeTrail[i].y + size*2, 500);
+                            ctx.fill();
+                        } else {
+                            // Moving South
+                            ctx.beginPath();
+                            ctx.roundRect(snakeTrail[i].x-size, snakeTrail[i-1].y-size, size*2, snakeTrail[i].y - snakeTrail[i-1].y + size*2, 500);
+                            ctx.fill();
+                        }
+
+                    } else if (snakeTrail[i].y === snakeTrail[i-1].y) {
+                        // Horizontal segment
+                        if (snakeTrail[i].x < snakeTrail[i-1].x) {
+                            // Moving West
+                            ctx.beginPath();
+                            ctx.roundRect(snakeTrail[i].x-size, snakeTrail[i].y-size, snakeTrail[i-1].x - snakeTrail[i].x + size*2, size*2, 500);
+                            ctx.fill();
+                        } else {
+                            // Moving East
+                            ctx.beginPath();
+                            ctx.roundRect(snakeTrail[i-1].x-size, snakeTrail[i].y-size, snakeTrail[i].x - snakeTrail[i-1].x + size*2, size*2, 500);
+                            ctx.fill();
+                        }
+                    }
+
+
+                }
+
+            }
+
+            tailWidthDecrease += moveSpeed;
+
+            //Make the tail move in the correct direction
+            if (snakeTrail[0].x < snakeTrail[1].x) {
+                // Moving East
+                snakeTrail[0].x += moveSpeed;
+                ctx.beginPath();
+                ctx.roundRect(snakeTrail[0].x-size, snakeTrail[0].y-size, size*4 - tailWidthDecrease, size*2, 500);
+                ctx.fill();
+            } else if (snakeTrail[0].x > snakeTrail[1].x) {
+                // Moving West
+                snakeTrail[0].x -= moveSpeed;
+                ctx.beginPath();
+                ctx.roundRect(snakeTrail[0].x-size-size*2+tailWidthDecrease, snakeTrail[0].y-size, size*4 - tailWidthDecrease, size*2, 500);
+                ctx.fill();
+            } else if (snakeTrail[0].y < snakeTrail[1].y) {
+                // Moving South
+                snakeTrail[0].y += moveSpeed;
+                ctx.beginPath();
+                ctx.roundRect(snakeTrail[0].x-size, snakeTrail[0].y-size, size*2, size*4 - tailWidthDecrease, 500);
+                ctx.fill();
+            } else if (snakeTrail[0].y > snakeTrail[1].y) {
+                // Moving North
+                snakeTrail[0].y -= moveSpeed;
+                ctx.beginPath();
+                ctx.roundRect(snakeTrail[0].x-size, snakeTrail[0].y-size-size*2+tailWidthDecrease, size*2, size*4-tailWidthDecrease, 500);
+                ctx.fill();
+            }
+
+            // Make the head connect to the body properly
+            if (direction === "EAST") {
+                ctx.beginPath();
+                ctx.roundRect(snakeTrail[snakeTrail.length - 1].x-size, snakeTrail[snakeTrail.length - 1].y-size, size*2 + tailWidthDecrease, size*2, 500);
+                ctx.fill();
+            } else if (direction === "WEST") {
+                ctx.beginPath();
+                ctx.roundRect(snakeTrail[snakeTrail.length - 1].x-size - (tailWidthDecrease), snakeTrail[snakeTrail.length - 1].y-size, size*2 + tailWidthDecrease, size*2, 500);
+                ctx.fill();
+            } else if (direction === "SOUTH") {
+                ctx.beginPath();
+                ctx.roundRect(snakeTrail[snakeTrail.length - 1].x-size, snakeTrail[snakeTrail.length - 1].y-size, size*2, size*2 + tailWidthDecrease, 500);
+                ctx.fill();
+            } else if (direction === "NORTH") {
+                ctx.beginPath();
+                ctx.roundRect(snakeTrail[snakeTrail.length - 1].x-size, snakeTrail[snakeTrail.length - 1].y-size - (tailWidthDecrease), size*2, size*2 + tailWidthDecrease, 500);
+                ctx.fill();
+            }
+
+            
+
+            
+
         }
         
         // Game loop for 60 FPS
         function gameLoop() {
 
             if (runGame === true) {
+                if ((x-size) % (size*2) < moveSpeed && (y-size) % (size*2) < moveSpeed) {
+                    if (keysPressed.length > 0) {
+                        console.log(keysPressed, direction);
+                        direction = keysPressed.shift(); // Get first element and remove it
+
+                        x = Math.floor(x / (size*2)) * (size*2) + size;
+                        y = Math.floor(y / (size*2)) * (size*2) + size;
+                        //console.log(x / (size*2), Math.round((x / (size*2))*100) / 100);
+
+                        
+                        
+                    }
+                    // Add current position to snake trail
+                    snakeTrail.push({x: x, y: y});
+                    if (snakeTrail.length > snakeLength) {
+                        snakeTrail.shift();
+                    }
+
+                    tailWidthDecrease = 0;
+                    
+
+                }
+
+                // Update position based on direction
                 if (direction === "EAST") {
                     x += moveSpeed;
                     if (x > canvas.width-size) x = canvas.width - size; // Wrap around
@@ -108,12 +240,7 @@
                     if (y > canvas.height-size) y = canvas.height - size; // Wrap around
                 }
 
-                if ((x-size) % (size*2) <= 1.5 && (y-size) % (size*2) <= 1.5) {
-                    if (keysPressed.length > 0) {
-                        direction = keysPressed.shift(); // Get first element and remove it
-                        console.log(keysPressed);
-                    }
-                }
+                
                 
 
                 
@@ -129,27 +256,39 @@
             
             switch(event.key) {
                 case 'ArrowUp':
-                    if (direction !== "SOUTH" && keysPressed[keysPressed.length - 1] !== "NORTH" && keysPressed.length <= 3) {
-                        //direction = "NORTH";
-                        keysPressed.push("NORTH");  // Adds key to end of array
+                    if (keysPressed.length < 2 && keysPressed[keysPressed.length - 1] !== "NORTH") {
+                        if (keysPressed.length === 0 && direction !== "SOUTH") {
+                            keysPressed.push("NORTH");  // Adds key to end of array
+                        } else if (keysPressed[keysPressed.length - 1] !== "SOUTH" && keysPressed.length > 0) {
+                            keysPressed.push("NORTH");  // Adds key to end of array
+                        }
                     }
                     break;
                 case 'ArrowDown':
-                    if (direction !== "NORTH" && keysPressed[keysPressed.length - 1] !== "SOUTH" && keysPressed.length <= 3) {
-                        //direction = "SOUTH";
-                        keysPressed.push("SOUTH");  // Adds key to end of array
+                    if (keysPressed.length < 2 && keysPressed[keysPressed.length - 1] !== "SOUTH") {
+                        if (keysPressed.length === 0 && direction !== "NORTH") {
+                            keysPressed.push("SOUTH");  // Adds key to end of array
+                        } else if (keysPressed[keysPressed.length - 1] !== "NORTH" && keysPressed.length > 0) {
+                            keysPressed.push("SOUTH");  // Adds key to end of array
+                        }
                     }
                     break;
                 case 'ArrowLeft':
-                    if (direction !== "EAST" && keysPressed[keysPressed.length - 1] !== "WEST" && keysPressed.length <= 3) {
-                        //direction = "WEST";
-                        keysPressed.push("WEST");  // Adds key to end of array
+                    if (keysPressed.length < 2 && keysPressed[keysPressed.length - 1] !== "WEST") {
+                        if (keysPressed.length === 0 && direction !== "EAST") {
+                            keysPressed.push("WEST");  // Adds key to end of array
+                        } else if (keysPressed[keysPressed.length - 1] !== "EAST" && keysPressed.length > 0) {
+                            keysPressed.push("WEST");  // Adds key to end of array
+                        }
                     }
                     break;
                 case 'ArrowRight':
-                    if (direction !== "WEST" && keysPressed[keysPressed.length - 1] !== "EAST" && keysPressed.length <= 3) {
-                        //direction = "EAST";
-                        keysPressed.push("EAST");  // Adds key to end of array
+                    if (keysPressed.length < 2 && keysPressed[keysPressed.length - 1] !== "EAST") {
+                        if (keysPressed.length === 0 && direction !== "WEST") {
+                            keysPressed.push("EAST");  // Adds key to end of array
+                        } else if (keysPressed[keysPressed.length - 1] !== "WEST" && keysPressed.length > 0) {
+                            keysPressed.push("EAST");  // Adds key to end of array
+                        }
                     }
                     break;
             }
