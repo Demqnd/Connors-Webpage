@@ -65,6 +65,12 @@
         let snakeLength = 3;
         let tailWidthDecrease = 0;
 
+        // Apples
+        let apples = [];
+        let numApples = 1;
+        // size * (1 + 2 * n) where n is column/row that apple is in
+        apples.push({x: size * (1 + 2 * 11), y: size * (1 + 2 * 6)});
+
         // Initialize snake with all 3 segments
         for (let i = 0; i < snakeLength; i++) {
             snakeTrail.unshift({x: x - (i * size*2), y: y});
@@ -93,6 +99,17 @@
                 }
                 
             }
+
+
+            //Draw apples
+            ctx.fillStyle = 'green';
+            for (let i = 0; i < apples.length; i++) {
+                ctx.beginPath();
+                ctx.arc(apples[i].x, apples[i].y, size, 0, Math.PI * 2);
+                ctx.fill();
+                
+            }
+
 
             
             // Draw red ball
@@ -204,12 +221,10 @@
             if (runGame === true) {
                 if ((x-size) % (size*2) < moveSpeed && (y-size) % (size*2) < moveSpeed) {
                     if (keysPressed.length > 0) {
-                        console.log(keysPressed, direction);
                         direction = keysPressed.shift(); // Get first element and remove it
 
                         x = Math.floor(x / (size*2)) * (size*2) + size;
                         y = Math.floor(y / (size*2)) * (size*2) + size;
-                        //console.log(x / (size*2), Math.round((x / (size*2))*100) / 100);
 
                         
                         
@@ -240,8 +255,63 @@
                     if (y > canvas.height-size) y = canvas.height - size; // Wrap around
                 }
 
-                
-                
+                // Check for trail collisions
+                if (snakeTrail.length > 0) {
+                    // Check for collision with self
+                    for (let i = 0; i < snakeTrail.length - 1; i++) {
+                        if (Math.abs(x - snakeTrail[i].x) < size && Math.abs(y - snakeTrail[i].y) < size) {
+                            // Collision detected
+                            document.getElementById('output').innerText = "Game Over! Final Length: " + snakeLength;
+                            runGame = false;
+                            // Show the start button again
+                            document.getElementById('startButton').style.display = 'inline-block';
+
+                            // Simple variables
+                            direction = "EAST";
+
+                            // Make the multiplied number an odd number to allign properly with checkerboard
+                            x = size  *  7 + moveSpeed*2;
+                            y = size  *  13;
+                            
+                            // Array to track pressed keys
+                            keysPressed = [];
+
+                            // Array to track where the snake has been
+                            snakeTrail = [];
+                            snakeLength = 3;
+                            tailWidthDecrease = 0;
+
+                            // Apples
+                            apples = [];
+                            numApples = 1;
+                            // size * (1 + 2 * n) where n is column/row that apple is in
+                            apples.push({x: size * (1 + 2 * 11), y: size * (1 + 2 * 6)});
+
+                            // Initialize snake with all 3 segments
+                            for (let i = 0; i < snakeLength; i++) {
+                                snakeTrail.unshift({x: x - (i * size*2), y: y});
+                            }
+                            break;
+
+
+
+
+                        }
+                    }
+                }
+
+                // Check for apple collisions
+                for (let i = 0; i < apples.length; i++) {
+                    if (Math.abs(x - apples[i].x) < size && Math.abs(y - apples[i].y) < size) {
+                        // Ate an apple
+                        snakeLength += 1;
+                        // Move the apple to a new random position
+                        let newAppleX = size * (1 + 2 * Math.floor(Math.random() * 15));
+                        let newAppleY = size * (1 + 2 * Math.floor(Math.random() * 15));
+                        apples[i] = {x: newAppleX, y: newAppleY};
+                    }
+                }
+
 
                 
                 requestAnimationFrame(gameLoop); // Runs at 60 FPS
@@ -297,7 +367,8 @@
 
         //Click event listener. For use later if needed.
         canvas.addEventListener('click', function(event) {
-            
+            snakeLength += 1;
+            console.log('Canvas X:', event.offsetX, 'Canvas Y:', event.offsetY)
         });
 
         // Button click event to start game
