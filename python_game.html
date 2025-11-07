@@ -77,14 +77,7 @@
         }
 
         
-        
-
-        function draw() {
-            // Clear screen
-            ctx.fillStyle = 'black';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-
+        function drawBoard() {
             //Drawing checkerboard pattern
             ctx.fillStyle = 'gray';
             for (let i = 0; i < canvas.width; i += size*2*2) {
@@ -99,9 +92,10 @@
                 }
                 
             }
+        }
 
 
-            //Draw apples
+        function drawApples() {
             ctx.fillStyle = 'green';
             for (let i = 0; i < apples.length; i++) {
                 ctx.beginPath();
@@ -109,15 +103,16 @@
                 ctx.fill();
                 
             }
+        }
 
-
-            
-            // Draw red ball
-            ctx.beginPath();
+        function drawSnakeHead() {
             ctx.fillStyle = 'red';
+            ctx.beginPath();
             ctx.arc(x, y, size, 0, Math.PI * 2);
             ctx.fill();
+        }
 
+        function drawSnakeBody() {
             // Draw the snake trail
             ctx.fillStyle = 'red';
             for (let i = 0; i < snakeTrail.length; i++) {
@@ -155,14 +150,11 @@
                             ctx.fill();
                         }
                     }
-
-
                 }
-
             }
+        }
 
-            tailWidthDecrease += moveSpeed;
-
+        function drawSnakeTailHeadConnection() {
             //Make the tail move in the correct direction
             if (snakeTrail[0].x < snakeTrail[1].x) {
                 // Moving East
@@ -209,12 +201,69 @@
                 ctx.fill();
             }
 
+        }
+
+        function draw() {
+            // Clear screen
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+
+            drawBoard();
+            drawApples();
+
+            drawSnakeHead();
+            drawSnakeBody();
+
+            tailWidthDecrease += moveSpeed;
+            drawSnakeTailHeadConnection();
+
+            
             
 
             
 
         }
         
+        function checkSelfCollision() {
+            for (let i = 0; i < snakeTrail.length - 1; i++) {
+                if (Math.abs(x - snakeTrail[i].x) < size && Math.abs(y - snakeTrail[i].y) < size) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function checkAppleCollision() {
+            for (let i = 0; i < apples.length; i++) {
+                if (Math.abs(x - apples[i].x) < size && Math.abs(y - apples[i].y) < size) {
+                    // Ate an apple
+                    snakeLength += 1;
+                    // Move the apple to a new random position
+                    let newAppleX = size * (1 + 2 * Math.floor(Math.random() * 15));
+                    let newAppleY = size * (1 + 2 * Math.floor(Math.random() * 15));
+                    apples[i] = {x: newAppleX, y: newAppleY};
+                }
+            }
+        }
+
+        function resetGame() {
+            direction = "EAST";
+            x = size  *  7 + moveSpeed*2;
+            y = size  *  13;
+            keysPressed = [];
+            snakeTrail = [];
+            snakeLength = 3;
+            tailWidthDecrease = 0;
+            apples = [];
+            numApples = 1;
+            apples.push({x: size * (1 + 2 * 11), y: size * (1 + 2 * 6)});
+            for (let i = 0; i < snakeLength; i++) {
+                snakeTrail.unshift({x: x - (i * size*2), y: y});
+            }
+            document.getElementById('output').innerText = "Ready to play!";
+        }
+
         // Game loop for 60 FPS
         function gameLoop() {
 
@@ -237,6 +286,7 @@
 
                     tailWidthDecrease = 0;
                     
+                    
 
                 }
 
@@ -258,59 +308,23 @@
                 // Check for trail collisions
                 if (snakeTrail.length > 0) {
                     // Check for collision with self
-                    for (let i = 0; i < snakeTrail.length - 1; i++) {
-                        if (Math.abs(x - snakeTrail[i].x) < size && Math.abs(y - snakeTrail[i].y) < size) {
-                            // Collision detected
-                            document.getElementById('output').innerText = "Game Over! Final Length: " + snakeLength;
-                            runGame = false;
-                            // Show the start button again
-                            document.getElementById('startButton').style.display = 'inline-block';
+                    if (checkSelfCollision()) {
+                        // Collision detected
+                        document.getElementById('output').innerText = "Game Over! Final Length: " + snakeLength;
+                        runGame = false;
+                        // Show the start button again
+                        document.getElementById('startButton').style.display = 'inline-block';
 
-                            // Simple variables
-                            direction = "EAST";
-
-                            // Make the multiplied number an odd number to allign properly with checkerboard
-                            x = size  *  7 + moveSpeed*2;
-                            y = size  *  13;
-                            
-                            // Array to track pressed keys
-                            keysPressed = [];
-
-                            // Array to track where the snake has been
-                            snakeTrail = [];
-                            snakeLength = 3;
-                            tailWidthDecrease = 0;
-
-                            // Apples
-                            apples = [];
-                            numApples = 1;
-                            // size * (1 + 2 * n) where n is column/row that apple is in
-                            apples.push({x: size * (1 + 2 * 11), y: size * (1 + 2 * 6)});
-
-                            // Initialize snake with all 3 segments
-                            for (let i = 0; i < snakeLength; i++) {
-                                snakeTrail.unshift({x: x - (i * size*2), y: y});
-                            }
-                            break;
+                        
+                        resetGame();
+                        return;
 
 
-
-
-                        }
                     }
                 }
 
                 // Check for apple collisions
-                for (let i = 0; i < apples.length; i++) {
-                    if (Math.abs(x - apples[i].x) < size && Math.abs(y - apples[i].y) < size) {
-                        // Ate an apple
-                        snakeLength += 1;
-                        // Move the apple to a new random position
-                        let newAppleX = size * (1 + 2 * Math.floor(Math.random() * 15));
-                        let newAppleY = size * (1 + 2 * Math.floor(Math.random() * 15));
-                        apples[i] = {x: newAppleX, y: newAppleY};
-                    }
-                }
+                checkAppleCollision();
 
 
                 
@@ -377,6 +391,13 @@
             document.getElementById('startButton').style.display = 'none';
             
             // Start the game animation
+
+
+            // RESET GAME STATE
+            resetGame();
+
+            document.getElementById('output').innerText = "Ready to play!";
+
             runGame = true;
             gameLoop();
         });
