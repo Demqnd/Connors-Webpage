@@ -31,7 +31,7 @@
     <canvas id="gameCanvas" width="780" height="780"></canvas>
     
     <!-- Start Game Button - Centered under the canvas -->
-    <div style="width: 780px; text-align: center; margin-top: 20px;">
+    <div style="width: 780px; text-align: center; margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 20px;">
         <button id="startButton" style="
             padding: 15px 30px;
             font-size: 20px;
@@ -40,6 +40,16 @@
             border-radius: 16px;
             cursor: pointer;
         ">Click to Play</button>
+        <select id="difficultySelect" style="
+            padding: 12px 18px;
+            font-size: 18px;
+            border-radius: 12px;
+            margin-left: 10px;
+            cursor: pointer;">
+            <option value="1.5">Easy</option>
+            <option value="3">Medium</option>
+            <option value="5.5">Hard</option>
+        </select>
     </div>
     
 
@@ -50,7 +60,7 @@
         // Simple variables
         let size = 26;
         let direction = "EAST";
-        const moveSpeed = 1.25; // Smaller movement since we're running at 60 FPS
+        let moveSpeed = 1.5; // Default to Easy
 
         // Make the multiplied number an odd number to allign properly with checkerboard
         let x = size  *  7 + moveSpeed*2;
@@ -225,45 +235,6 @@
 
         }
         
-        function checkSelfCollision() {
-            for (let i = 0; i < snakeTrail.length - 1; i++) {
-                if (Math.abs(x - snakeTrail[i].x) < size && Math.abs(y - snakeTrail[i].y) < size) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        function checkAppleCollision() {
-            for (let i = 0; i < apples.length; i++) {
-                if (Math.abs(x - apples[i].x) < size && Math.abs(y - apples[i].y) < size) {
-                    // Ate an apple
-                    snakeLength += 1;
-                    // Move the apple to a new random position
-                    let newAppleX = size * (1 + 2 * Math.floor(Math.random() * 15));
-                    let newAppleY = size * (1 + 2 * Math.floor(Math.random() * 15));
-                    apples[i] = {x: newAppleX, y: newAppleY};
-                }
-            }
-        }
-
-        function resetGame() {
-            direction = "EAST";
-            x = size  *  7 + moveSpeed*2;
-            y = size  *  13;
-            keysPressed = [];
-            snakeTrail = [];
-            snakeLength = 3;
-            tailWidthDecrease = 0;
-            apples = [];
-            numApples = 1;
-            apples.push({x: size * (1 + 2 * 11), y: size * (1 + 2 * 6)});
-            for (let i = 0; i < snakeLength; i++) {
-                snakeTrail.unshift({x: x - (i * size*2), y: y});
-            }
-            document.getElementById('output').innerText = "Ready to play!";
-        }
-
         // Game loop for 60 FPS
         function gameLoop() {
 
@@ -308,23 +279,43 @@
                 // Check for trail collisions
                 if (snakeTrail.length > 0) {
                     // Check for collision with self
-                    if (checkSelfCollision()) {
-                        // Collision detected
-                        document.getElementById('output').innerText = "Game Over! Final Length: " + snakeLength;
-                        runGame = false;
-                        // Show the start button again
-                        document.getElementById('startButton').style.display = 'inline-block';
+                    for (let i = 0; i < snakeTrail.length - 1; i++) {
+                        if (Math.abs(x - snakeTrail[i].x) < size && Math.abs(y - snakeTrail[i].y) < size) {
+                            // Collision detected
+                            document.getElementById('output').innerText = "Game Over! Final Length: " + snakeLength;
+                            runGame = false;
+                            // Show the start button again
+                            document.getElementById('startButton').style.display = 'inline-block';
+                            document.getElementById('difficultySelect').style.display = 'inline-block';
 
-                        
-                        resetGame();
-                        return;
+                            
+                            break;
 
 
+
+
+                        }
                     }
                 }
 
                 // Check for apple collisions
-                checkAppleCollision();
+                for (let i = 0; i < apples.length; i++) {
+                    if (Math.abs(x - apples[i].x) < size && Math.abs(y - apples[i].y) < size) {
+                        // Ate an apple
+                        snakeLength += 1;
+                        // Move the apple to a new random position
+                        let newAppleX = size * (1 + 2 * Math.floor(Math.random() * 15));
+                        let newAppleY = size * (1 + 2 * Math.floor(Math.random() * 15));
+                        apples[i] = {x: newAppleX, y: newAppleY};
+                    }
+                }
+
+                while (apples.length < numApples) {
+                    // Add a new apple
+                    let newAppleX = size * (1 + 2 * Math.floor(Math.random() * 15));
+                    let newAppleY = size * (1 + 2 * Math.floor(Math.random() * 15));
+                    apples.push({x: newAppleX, y: newAppleY});
+                }
 
 
                 
@@ -389,15 +380,27 @@
         document.getElementById('startButton').addEventListener('click', function() {
             // Hide the button
             document.getElementById('startButton').style.display = 'none';
-            
-            // Start the game animation
+            document.getElementById('difficultySelect').style.display = 'none';
 
+            // Set moveSpeed based on selected difficulty
+            const diff = document.getElementById('difficultySelect').value;
+            moveSpeed = parseFloat(diff);
 
             // RESET GAME STATE
-            resetGame();
-
+            direction = "EAST";
+            x = size  *  7 + moveSpeed*2;
+            y = size  *  13;
+            keysPressed = [];
+            snakeTrail = [];
+            snakeLength = 3;
+            tailWidthDecrease = 0;
+            apples = [];
+            numApples = 1;
+            apples.push({x: size * (1 + 2 * 11), y: size * (1 + 2 * 6)});
+            for (let i = 0; i < snakeLength; i++) {
+                snakeTrail.unshift({x: x - (i * size*2), y: y});
+            }
             document.getElementById('output').innerText = "Ready to play!";
-
             runGame = true;
             gameLoop();
         });
