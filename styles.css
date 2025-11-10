@@ -7,12 +7,13 @@
 /* Fixed Navigation Bar */
 .navbar {
     position: fixed;        /* Stays in place when scrolling */
-    top: 0;                /* Sticks to the top */
-    left: 0;               /* Starts from left edge */
-    width: 100%;           /* Full width */
+    top: 5px;                /* Sticks to the top */
+    left: 300px;               /* Starts from left edge */
+    right: 300px;           /* Full width */
     background-color: #333; /* Dark background */
     z-index: 1000;         /* Appears above other content */
     box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+    border-radius: 20px;
 }
 
 .nav-container {
@@ -40,17 +41,20 @@
     color: white;
     text-decoration: none;
     font-size: 16px;
-    padding: 15px 0;
-    transition: color 0.3s ease;
+    padding: 0px 0;
+    transition: color 0.2s ease;
 }
 
 .nav-links a:hover {
-    color: #4CAF50; /* Green color on hover */
+    color: rgb(55, 55, 252); /* Green color on hover */
 }
+
 
 /* Add top margin to body content so it doesn't hide behind navbar */
 .container {
     margin-top: 80px; /* Push content below the fixed navbar */
+    min-height: 80vh; /* Ensure enough height for scrolling */
+    padding-bottom: 80px; /* Allow scrolling past content above footer */
 }
 
 h1 {
@@ -68,4 +72,36 @@ h1 {
 #startButton:hover {
     transform: scale(1.1); /* Make it 10% bigger */
     box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* Add shadow for "popping out" effect */
+}
+
+/* Social media icon links */
+.social-links {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  margin-top: 0;
+}
+
+.social-icon {
+  width: 32px;
+  height: 32px;
+  transition: transform 0.2s;
+}
+
+.social-icon:hover {
+  transform: scale(1.15);
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.18));
+}
+
+/* Fixed footer for social links */
+.footer-social {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  padding: 18px 0 12px 0;
+  z-index: 1001;
 }

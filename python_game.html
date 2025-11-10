@@ -404,6 +404,61 @@
             runGame = true;
             gameLoop();
         });
+        // === Gamepad (Xbox controller) test: log joystick movement ===
+        (function testGamepadMovement() {
+          function pollGamepad() {
+            const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+            const gp = gamepads[0];
+            if (gp) {
+              // Log left stick axes if moved significantly
+              const threshold = 0.75;
+              if (Math.abs(gp.axes[0]) > threshold || Math.abs(gp.axes[1]) > threshold) {
+                console.log('Left stick:', 'x:', gp.axes[0].toFixed(2), 'y:', gp.axes[1].toFixed(2));
+                
+
+
+
+
+
+                if (keysPressed.length < 2 && keysPressed[keysPressed.length - 1] !== "NORTH" && gp.axes[1] < -threshold) {
+                    if (keysPressed.length === 0 && direction !== "SOUTH") {
+                        keysPressed.push("NORTH");  // Adds key to end of array
+                    } else if (keysPressed[keysPressed.length - 1] !== "SOUTH" && keysPressed.length > 0) {
+                        keysPressed.push("NORTH");  // Adds key to end of array
+                    }
+                }
+                if (keysPressed.length < 2 && keysPressed[keysPressed.length - 1] !== "SOUTH" && gp.axes[1] > threshold) {
+                    if (keysPressed.length === 0 && direction !== "NORTH") {
+                        keysPressed.push("SOUTH");  // Adds key to end of array
+                    } else if (keysPressed[keysPressed.length - 1] !== "NORTH" && keysPressed.length > 0) {
+                        keysPressed.push("SOUTH");  // Adds key to end of array
+                    }
+                }
+                if (keysPressed.length < 2 && keysPressed[keysPressed.length - 1] !== "WEST" && gp.axes[0] < -threshold) {
+                    if (keysPressed.length === 0 && direction !== "EAST") {
+                        keysPressed.push("WEST");  // Adds key to end of array
+                    } else if (keysPressed[keysPressed.length - 1] !== "EAST" && keysPressed.length > 0) {
+                        keysPressed.push("WEST");  // Adds key to end of array
+                    }
+                }
+                if (keysPressed.length < 2 && keysPressed[keysPressed.length - 1] !== "EAST" && gp.axes[0] > threshold) {
+                    if (keysPressed.length === 0 && direction !== "WEST") {
+                        keysPressed.push("EAST");  // Adds key to end of array
+                    } else if (keysPressed[keysPressed.length - 1] !== "WEST" && keysPressed.length > 0) {
+                        keysPressed.push("EAST");  // Adds key to end of array
+                    }
+                }
+
+
+
+
+                
+              }
+            }
+            requestAnimationFrame(pollGamepad);
+          }
+          pollGamepad();
+        })();
 
         // Draw the initial screen once (but don't start animation)
         draw();
