@@ -35,6 +35,7 @@
     display: flex;
     list-style: none;
     gap: 30px;
+    margin-top: 0px; /* Moves nav links lower inside navbar */
 }
 
 .nav-links a {
@@ -43,7 +44,16 @@
     font-size: 16px;
     padding: 0px 0;
     transition: color 0.2s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
+.nav-links .active {
+    color: #37f;
+}
+
 
 .nav-links a:hover {
     color: rgb(55, 55, 252); /* Green color on hover */
@@ -53,9 +63,11 @@
 /* Add top margin to body content so it doesn't hide behind navbar */
 .container {
     margin-top: 80px; /* Push content below the fixed navbar */
-    min-height: 80vh; /* Ensure enough height for scrolling */
-    padding-bottom: 80px; /* Allow scrolling past content above footer */
+    min-height: 20vh; /* Ensure enough height for scrolling */
 }
+
+
+
 
 h1 {
     margin-bottom: 5px; /* Control the space after heading */
@@ -97,11 +109,24 @@ h1 {
 .footer-social {
   position: fixed;
   left: 0;
-  bottom: 0;
+  bottom: 30px;
   width: 100%;
   background: transparent;
   display: flex;
   justify-content: center;
   padding: 18px 0 12px 0;
   z-index: 1001;
+}
+
+/* Shadow effect at the bottom of the page */
+body::after {
+  content: '';
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 50px;
+  pointer-events: none;
+  z-index: 1002;
+  background: linear-gradient(to top, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0));
 }
