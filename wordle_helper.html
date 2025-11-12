@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - Connor's Website</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="wordle_helper.css">
+    
 </head>
 <body>
     <!-- Fixed Navigation Bar -->
@@ -14,9 +16,9 @@
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
-                <li><a href="contact.html" class="active">Contact</a></li>
+                <li><a href="contact.html">Contact</a></li>
                 <li><a href="python_game.html">Game</a></li>
-                <li><a href="wordle_helper.html">Wordle Helper</a></li>
+                <li><a href="wordle_helper.html" class="active">Wordle Helper</a></li>
                 <li><a href="assets/images/Connor’s Resume - Nov 2025.pdf" target="_blank">Resume</a></li>
             </ul>
         </div>
@@ -24,13 +26,23 @@
 
 
 
-
-
     <div class="container">
-        <h1>Contact Me</h1>
-        <p>Wus Good</p>
-    </div>
+        <h1>Wordle Helper</h1>
+
+        <div id="wordle-rows">
+            <div class="wordle-row">
+                <div class="wordle-box"></div>
+                <div class="wordle-box"></div>
+                <div class="wordle-box"></div>
+                <div class="wordle-box"></div>
+                <div class="wordle-box"></div>
+            </div>
+        </div>
+        <div class="search-section">
+            <button id="solve-button">Solve</button>
+        </div>
 
     <script src="script.js"></script> 
+    <script src="wordle_helper.js"></script> 
 </body>
 </html>
