@@ -3,6 +3,45 @@ document.addEventListener('DOMContentLoaded', function() {
 	var colors = ['#787c7e', '#c9b458', '#6aaa64']; // gray, yellow, green
 	var activeBox = null;
 
+
+	function calculatePossibleWords() {
+		console.log(newBoxes.map(box => box.textContent.trim()).join(''));
+		var greenLetters = [];
+		for (var i = 0; i < newBoxes.length; i++) {
+			if (newBoxes[i].colorIndex === 0) {
+				blackLetters.push(newBoxes[i].textContent.trim().toLowerCase());
+			} else if (newBoxes[i].colorIndex === 1) {
+				yellowLetters.push(newBoxes[i].textContent.trim().toLowerCase());
+			} else if (newBoxes[i].colorIndex === 2) {
+				greenLetters.push({ letter: newBoxes[i].textContent.trim().toLowerCase(), index: i });
+			}
+		}
+		// Example: blackLetters is an array of single characters to exclude
+		var filteredWords = fiveLetterWords.filter(function(word) {
+			// Exclude words with any black letter
+			if (blackLetters.some(function(letter) { return word.includes(letter); })) {
+				return false;
+			}
+			// Must include all yellow letters
+			if (!yellowLetters.every(function(letter) { return word.includes(letter); })) {
+				return false;
+			}
+			// Must have green letters in the correct positions
+			for (var j = 0; j < greenLetters.length; j++) {
+				if (word[greenLetters[j].index] !== greenLetters[j].letter) {
+					return false;
+				}
+			}
+			return true;
+		});
+		console.log('Filtered words:', filteredWords);
+		
+
+
+
+		
+	}
+
 	function setupBox(box) {
 		box.colorIndex = 0;
 		box.style.backgroundColor = colors[box.colorIndex];
@@ -17,37 +56,54 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 	}
 
+	let fiveLetterWords = [];
+	fetch('assets/words_alpha.txt')
+	.then(response => response.text())
+	.then(text => {
+		fiveLetterWords = text
+		.split('\n')
+		.map(word => word.trim())
+		.filter(word => word.length === 5);
+	});
+
+	var newBoxes = [];
+	var blackLetters = [];
+	var yellowLetters = [];
+	var greenLetters = [];
 	// Setup initial boxes
 	var boxes = document.querySelectorAll('.wordle-box');
 	for (var i = 0; i < boxes.length; i++) {
 		setupBox(boxes[i]);
+		newBoxes.push(boxes[i]);
 	}
 
 	// Add new row on Solve button click
 	var solveBtn = document.getElementById('solve-button');
+	
 	if (solveBtn) {
 		solveBtn.onclick = function() {
 			var rowsContainer = document.getElementById('wordle-rows');
-			// Get all rows
-			var allRows = rowsContainer.querySelectorAll('.wordle-row');
-			var lastRow = allRows[allRows.length - 1];
-			var boxes = lastRow.querySelectorAll('.wordle-box');
-			var word = '';
-			for (var i = 0; i < boxes.length; i++) {
-				var letter = boxes[i].textContent.trim();
-				word += letter ? letter : '_';
-			}
-			console.log('Most recent word:', word);
-
-			// Add a new row
 			var newRow = document.createElement('div');
 			newRow.className = 'wordle-row';
+			
+			//Printing current row letters to console
+			for (var i = 0; i < newBoxes.length; i++) {
+				if (newBoxes[i].textContent.trim() === '') {
+					newBoxes[i].textContent = "_";
+				}
+			}
+			
+			//Print possible words left
+			calculatePossibleWords();
+			
 			for (var i = 0; i < 5; i++) {
 				var box = document.createElement('div');
 				box.className = 'wordle-box';
 				setupBox(box);
 				newRow.appendChild(box);
+				newBoxes[i] = box;
 			}
+
 			rowsContainer.appendChild(newRow);
 		};
 	}
