@@ -1,5 +1,14 @@
 // Wordle box color cycling (simpler version)
 document.addEventListener('DOMContentLoaded', function() {
+	// Attach Restart button event
+	var restartBtn = document.getElementById('restart-btn');
+	if (restartBtn) {
+		restartBtn.onclick = function() { window.location.reload(); };
+	}
+	// Add style for active box green border
+	var style = document.createElement('style');
+	style.textContent = `.active-wordle-box { outline: 2.5px solid #22c55e !important; outline-offset: 2px !important; }`;
+	document.head.appendChild(style);
 	var colors = ['#787c7e', '#c9b458', '#6aaa64']; // gray, yellow, green
 	var activeBox = null;
 
@@ -17,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		}
 		// Example: blackLetters is an array of single characters to exclude
-		var filteredWords = fiveLetterWords.filter(function(word) {
+		fiveLetterWords = fiveLetterWords.filter(function(word) {
 			// Exclude words with any black letter
 			if (blackLetters.some(function(letter) { return word.includes(letter); })) {
 				return false;
@@ -34,7 +43,56 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 			return true;
 		});
-		console.log('Filtered words:', filteredWords);
+		// Show remaining words on the screen with expand/collapse button
+		var outputDiv = document.getElementById('possible-words-output');
+		var expandBtn = document.getElementById('expand-words-btn');
+		var showingAll = outputDiv && outputDiv.getAttribute('data-showing-all') === 'true';
+		if (!outputDiv) {
+			outputDiv = document.createElement('div');
+			outputDiv.id = 'possible-words-output';
+			outputDiv.style.margin = '20px auto';
+			outputDiv.style.textAlign = 'center';
+			outputDiv.style.maxWidth = '700px';
+			outputDiv.style.wordBreak = 'break-word';
+			document.body.appendChild(outputDiv);
+		}
+		if (!expandBtn) {
+			expandBtn = document.createElement('button');
+			expandBtn.id = 'expand-words-btn';
+			expandBtn.style.display = 'block';
+			expandBtn.style.margin = '10px auto';
+			expandBtn.style.padding = '6px 16px';
+			expandBtn.style.fontSize = '1em';
+			document.body.appendChild(expandBtn);
+		}
+		function updateWordsDisplay(showAll) {
+			if (fiveLetterWords.length === 0) {
+				outputDiv.textContent = 'No possible words left.';
+				expandBtn.style.display = 'none';
+				outputDiv.setAttribute('data-showing-all', 'false');
+				return;
+			}
+			if (fiveLetterWords.length > 20 && !showAll) {
+				outputDiv.textContent = fiveLetterWords.slice(0, 20).join(', ') + ` ... (${fiveLetterWords.length} total)`;
+				expandBtn.textContent = 'Show All';
+				expandBtn.style.display = 'block';
+				outputDiv.setAttribute('data-showing-all', 'false');
+			} else {
+				outputDiv.textContent = fiveLetterWords.join(', ');
+				if (fiveLetterWords.length > 20) {
+					expandBtn.textContent = 'Show Less';
+					expandBtn.style.display = 'block';
+				} else {
+					expandBtn.style.display = 'none';
+				}
+				outputDiv.setAttribute('data-showing-all', 'true');
+			}
+		}
+		updateWordsDisplay(showingAll);
+		expandBtn.onclick = function() {
+			var currentlyAll = outputDiv.getAttribute('data-showing-all') === 'true';
+			updateWordsDisplay(!currentlyAll);
+		};
 		
 
 
@@ -76,6 +134,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		setupBox(boxes[i]);
 		newBoxes.push(boxes[i]);
 	}
+	// Make the first box active on load
+	if (newBoxes.length > 0) {
+		activeBox = newBoxes[0];
+		activeBox.classList.add('active-wordle-box');
+	}
 
 	// Add new row on Solve button click
 	var solveBtn = document.getElementById('solve-button');
@@ -108,14 +171,33 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 	}
 
-	// Listen for key presses to type into the active box
+	// Listen for key presses to type into the boxes in sequence
 	document.addEventListener('keydown', function(e) {
-		if (activeBox) {
-			var letter = e.key;
-			if (/^[a-zA-Z]$/.test(letter)) {
-				activeBox.textContent = letter.toUpperCase();
-			} else if (e.key === 'Backspace' || e.key === 'Delete') {
-				activeBox.textContent = '';
+		// Only handle if a wordle box is focused or active
+		if (!document.querySelector('.wordle-box') || newBoxes.length === 0) return;
+		// Find the currently active box index
+		var idx = activeBox ? newBoxes.indexOf(activeBox) : -1;
+		if (idx === -1) idx = 0;
+		var letter = e.key;
+		if (/^[a-zA-Z]$/.test(letter)) {
+			newBoxes[idx].textContent = letter.toUpperCase();
+			if (activeBox) activeBox.classList.remove('active-wordle-box');
+			activeBox = newBoxes[idx];
+			activeBox.classList.add('active-wordle-box');
+			// Move to next box if not last, else keep last box active
+			if (idx < newBoxes.length - 1) {
+				activeBox.classList.remove('active-wordle-box');
+				activeBox = newBoxes[idx + 1];
+				activeBox.classList.add('active-wordle-box');
+			}
+		} else if (e.key === 'Backspace' || e.key === 'Delete') {
+			if (newBoxes[idx].textContent !== '') {
+				newBoxes[idx].textContent = '';
+			} else if (idx > 0) {
+				newBoxes[idx].classList.remove('active-wordle-box');
+				activeBox = newBoxes[idx - 1];
+				activeBox.classList.add('active-wordle-box');
+				newBoxes[idx - 1].textContent = '';
 			}
 		}
 	});

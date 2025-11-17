@@ -28,30 +28,30 @@
         </div>
     </nav>
 
-    <div id="output" style="color: black; font-size: 20px; margin: 0px; margin-left: 0px;">Ready to play!</div>
-    
-    <canvas id="gameCanvas" width="780" height="780"></canvas>
-    
-    <!-- Start Game Button - Centered under the canvas -->
-    <div style="width: 780px; text-align: center; margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 20px;">
-        <button id="startButton" style="
-            padding: 15px 30px;
-            font-size: 20px;
-            background-color: #4CAF50;
-            color: white;
-            border-radius: 16px;
-            cursor: pointer;
-        ">Click to Play</button>
-        <select id="difficultySelect" style="
-            padding: 12px 18px;
-            font-size: 18px;
-            border-radius: 12px;
-            margin-left: 10px;
-            cursor: pointer;">
-            <option value="1.5">Easy</option>
-            <option value="3">Medium</option>
-            <option value="5.5">Hard</option>
-        </select>
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh;">
+        <div id="output" style="color: black; font-size: 20px; margin: 0px;">Ready to play!</div>
+        <canvas id="gameCanvas" width="780" height="780"></canvas>
+        <!-- Start Game Button - Centered under the canvas -->
+        <div style="width: 780px; text-align: center; margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+            <button id="startButton" style="
+                padding: 15px 30px;
+                font-size: 20px;
+                background-color: #4CAF50;
+                color: white;
+                border-radius: 16px;
+                cursor: pointer;
+            ">Click to Play</button>
+            <select id="difficultySelect" style="
+                padding: 12px 18px;
+                font-size: 18px;
+                border-radius: 12px;
+                margin-left: 10px;
+                cursor: pointer;">
+                <option value="1.5">Easy</option>
+                <option value="3">Medium</option>
+                <option value="5.5">Hard</option>
+            </select>
+        </div>
     </div>
     
 
