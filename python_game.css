@@ -1,0 +1,58 @@
+/* Snake Game specific styles */
+body.snake-game {
+    margin-top: 100px;
+    margin-left: 60px;
+}
+
+.snake-game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+}
+
+#output {
+    color: black;
+    font-size: 20px;
+    margin: 0px;
+}
+
+#gameCanvas {
+    display: block;
+    margin: 0 auto;
+}
+
+#startButton {
+    padding: 15px 30px;
+    font-size: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#startButton:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+#difficultySelect {
+    padding: 12px 18px;
+    font-size: 18px;
+    border-radius: 12px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.snake-game-controls {
+    width: 780px;
+    text-align: center;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    min-height: 60px;
+}
