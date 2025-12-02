@@ -21,14 +21,22 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
-                <li><a href="python_game.html" class="active">Snake Game</a></li>
-                <li><a href="wordle_helper.html">Wordle Helper</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn active">Games</a>
+                    <div class="dropdown-content">
+                        <a href="python_game.html"><button class="dropdown-btn">Snake Game</button></a>
+                        <a href="wordle_helper.html"><button class="dropdown-btn">Wordle Helper</button></a>
+                    </div>
+                </li>
                 <li><a href="assets/images/Connor’s Resume - Nov 2025.pdf" target="_blank">Resume</a></li>
             </ul>
         </div>
     </nav>
 
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh;">
+        <div id="snake-instructions" style="margin-bottom: 18px; color: #3a4e7a; font-size: 20px; text-align: center; background: rgba(55,55,252,0.07); border-radius: 10px; padding: 10px 0; max-width: 420px; margin-left: auto; margin-right: auto;">
+            Use <span style="font-weight:600;">↑</span> <span style="font-weight:600;">↓</span> <span style="font-weight:600;">←</span> <span style="font-weight:600;">→</span> arrow keys to move the snake.
+        </div>
         <div id="output" style="color: black; font-size: 20px; margin: 0px;">Ready to play!</div>
         <canvas id="gameCanvas" width="780" height="780"></canvas>
         <!-- Start Game Button - Centered under the canvas -->

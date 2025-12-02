@@ -1,3 +1,40 @@
+/* Dropdown styles for navbar */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+.dropbtn {
+    cursor: pointer;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: linear-gradient(90deg, #232a3a 0%, #2d3e60 60%, #3a4e7a 100%);
+    min-width: 180px;
+    box-shadow: 0 6px 24px rgba(40,60,120,0.13), 0 1.5px 6px rgba(0,0,0,0.08);
+    border-radius: 0 0 14px 14px;
+    z-index: 1002;
+    padding: 10px 0;
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.dropdown-btn {
+    width: 90%;
+    margin: 1px 0%;
+    padding: 10px 0;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background: rgb(0, 0, 0);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.18s;
+    box-shadow: 0 1px 4px rgba(40,60,120,0.08);
+}
+
 /* Basic reset to control spacing */
 * {
     margin: 0;
@@ -5,15 +42,19 @@
 }
 
 /* Fixed Navigation Bar */
+
 .navbar {
-    position: fixed;        /* Stays in place when scrolling */
-    top: 5px;                /* Sticks to the top */
-    left: 300px;               /* Starts from left edge */
-    right: 300px;           /* Full width */
-    background-color: #333; /* Dark background */
-    z-index: 1000;         /* Appears above other content */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+    position: fixed;
+    top: 5px;
+    left: 300px;
+    right: 300px;
+    z-index: 1000;
     border-radius: 20px;
+    box-shadow: 0 6px 24px rgba(40,60,120,0.13), 0 1.5px 6px rgba(0,0,0,0.08);
+    background: linear-gradient(90deg, #0b1630 0%, #2d3e60 60%, #8694b3 100%);
+    border: 1.5px solid #2d3e60;
+    padding-bottom: 2px;
+    transition: box-shadow 0.2s;
 }
 
 .nav-container {
@@ -26,37 +67,50 @@
 }
 
 .nav-title {
-    color: white;
-    font-size: 24px;
+    color: #e0e7ff;
+    font-size: 26px;
     margin: 15px 0;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    text-shadow: 0 2px 8px rgba(40,60,120,0.18);
 }
 
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 30px;
-    margin-top: 0px; /* Moves nav links lower inside navbar */
+    gap: 22px;
+    margin-top: 0px;
 }
 
 .nav-links a {
-    color: white;
+    color: #e0e7ff;
     text-decoration: none;
-    font-size: 16px;
-    padding: 0px 0;
-    transition: color 0.2s ease;
+    font-size: 17px;
+    padding: 8px 18px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    transition: color 0.18s, background 0.18s, transform 0.18s;
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-weight: 500;
+    box-shadow: 0 1px 4px rgba(40,60,120,0.08);
 }
 
 .nav-links .active {
-    color: #37f;
+    color: rgb(255, 255, 255);
+    background: linear-gradient(90deg, #37f 0%, #4f8cff 100%);
+    box-shadow: 0 2px 8px rgba(55,55,252,0.13);
+    transform: scale(1.02);
 }
 
 
 .nav-links a:hover {
-    color: rgb(55, 55, 252); /* Green color on hover */
+    color: rgb(255, 255, 255);
+    background: linear-gradient(90deg, #37f 0%, #4f8cff 100%);
+    box-shadow: 0 2px 8px rgba(55,55,252,0.13);
+    transform: scale(1.02);
 }
 
 
