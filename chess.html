@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Connor's Website</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="wordle_helper.css">
+    
+</head>
+<body>
+    <!-- Fixed Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h2 class="nav-title">Connor's Site</h2>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn active">Games</a>
+                    <div class="dropdown-content">
+                        <a href="python_game.html"><button class="dropdown-btn">Snake Game</button></a>
+                        <a href="wordle_helper.html"><button class="dropdown-btn">Wordle Helper</button></a>
+                        <a href="chess.html"><button class="dropdown-btn">Chess Game</button></a>
+                </li>
+                <li><a href="assets/images/Connor’s Resume - Nov 2025.pdf" target="_blank">Resume</a></li>
+            </ul>
+        </div>
+    </nav>
+
+
+<head>
+    
+    <title>Chess Game</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 50px);
+            grid-template-rows: repeat(8, 50px);
+            gap: 0;
+            width: 400px;
+            height: 400px;
+            border: 2px solid #333;
+        }
+        .square {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            cursor: pointer;
+        }
+        .white { background: #f0d9b5; }
+        .black { background: #b58863; }
+            .chess-content-wrapper {
+                margin-top: 100px;
+                margin-left: 300px;
+            }
+            #captured-pieces {
+                margin-top: 100px;
+                margin-left: 300px;
+            }
+    </style>
+</head>
+<body>
+        <div class="chess-content-wrapper">
+            <h2>Chess Game (Prototype)</h2>
+            <div id="chessboard"></div>
+            <script src="chess.js"></script>
+        </div>
+</body>
+</html>
